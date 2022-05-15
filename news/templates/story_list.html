@@ -1,0 +1,119 @@
+{% extends 'base.html' %} {% load static %} {% block content %} 
+{% load timetags%} 
+<div class="bg-dark py-2 mb-5">
+    <div class="container d-flex justify-content-between">
+        <form method="get" class="d-flex" role="search">
+            <input
+            class="form-control me-2"
+            type="search"
+            name="q"
+            placeholder="Search"
+            aria-label="Search"
+            />
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+        <form method="get">
+        <div class="d-flex">
+            <div class="filter-by text-center align-items-center pe-2 mt-1">
+            Filter By:
+            </div>
+    
+            <button
+            type="submit"
+            name="f"
+            value="story"
+            class="btn btn-success"
+            >
+            Story
+            </button>
+            <button
+            type="submit"
+            name="f"
+            value="job"
+            class="btn btn-info mx-2"
+            >
+            Job
+            </button>
+            <button
+            type="submit"
+            name="f"
+            value="poll"
+            class="btn btn-danger"
+            >
+            Poll
+            </button>
+        </div>
+        </form>
+    </div>
+</div>
+  
+{% for story in stories%}
+<div class="col-md-6 mx-auto">
+    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+      <div class="col p-4 d-flex flex-column position-static">
+        <strong class="d-inline-block mb-2 text-success">{{story.type.capitalize}}</strong>
+        <h3 class="mb-0">{{story.title}}</h3>
+        <div class="mb-1 text-muted">{{story.time |convert_timestamp}}</div>
+        <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+        <a href="{% url 'news:story-detail' story.id %}" class="stretched-link">Continue reading</a>
+        <p>
+            <small class="text-muted">
+            Comments: {{story.descendants}} Point: {{story.score}}
+            </small>
+        </p>
+        <blockquote class="blockquote mb-0 align-center">
+
+            <footer class="blockquote-footer text-end">
+              By: <cite title="Source Title">{{story.by}}</cite>
+            </footer>
+          </blockquote>
+      </div>
+      <div class="col-auto row-auto d-none d-lg-block">
+        <svg class="bd-placeholder-img" width="250" height="350" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="35%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+      </div>
+    </div>
+  </div>
+
+{%endfor%}
+
+{% if is_paginated %}
+<nav aria-label="Page navigation example" class="my-5">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% endif %}
+      {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            </a>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+{% endif %}
+
+{% endblock content %}
