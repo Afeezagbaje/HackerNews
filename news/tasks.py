@@ -28,7 +28,6 @@ def get_create_story_comments(id):
         
 @shared_task
 def add_stories_db(stories_data):
-    print("/n _______Adding stories to DB________ /n", stories_data)
     for story_data in stories_data:
         story, _ = Story.objects.get_or_create(story_id=story_data["id"])
         story.story_id = story_data.get("id", "")
@@ -43,10 +42,6 @@ def add_stories_db(stories_data):
         story.title = story_data.get("title", "")
         story.url = story_data.get("url", "")
         story.is_hackernews = True
-        # story.parent = story_data.get("parent", -1)
-        # story.poll = story_data.get("poll", 0)
-        # story.text = story_data.get("text", "")
-        # story.part = story_data.get("part", [])
         story.save()
         get_create_story_comments(story_data["id"])
 
@@ -54,5 +49,4 @@ def add_stories_db(stories_data):
 @shared_task
 def get_stories_interval():
     res = get_stories_data()
-    print("/n _______Getting stories from API________ /n", res[:10])
     add_stories_db(res)

@@ -11,7 +11,6 @@ def get_stories():
         stories_data.raise_for_status()
         return stories_data.json()
     except Exception as err:
-        print("Ooops an Error occurred, we couldn't get stories", err)
         return False
     
     
@@ -21,7 +20,6 @@ def get_item(item_id):
         item_data.raise_for_status()
         return item_data.json()
     except Exception as err:
-        print("Ooops an Error occurred, we couldn't get the item(story, comment) data", err)
         return False
     
     
@@ -29,7 +27,6 @@ def get_stories_data():
     stories_data = get_stories()
     stories = []
     if not stories_data:
-        print("Ooops an Error occurred, we couldn't get stories data")
         return False
     for story_id in stories_data:
         item = get_item(story_id)
